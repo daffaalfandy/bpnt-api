@@ -53,6 +53,8 @@ router.get('/', async (req, res) => {
         let goods = await Goods.find({
             month,
             year
+        }).sort({
+            'updatedAt': -1
         })
 
         return res.json({

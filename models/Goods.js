@@ -33,6 +33,8 @@ const GoodsSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+}, {
+    timestamps: true
 })
 
 module.exports = Goods = mongoose.model('goods', GoodsSchema, 'goods-data')
