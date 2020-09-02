@@ -98,4 +98,51 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
+// @route   PUT api/goods/id
+// @desc    Update good
+// @access  Public
+router.put('/:id', async (req, res) => {
+    const _id = req.params.id;
+
+    const {
+        name,
+        stock,
+        unit,
+        buyPrice,
+        sellPrice
+    } = req.body
+
+    try {
+        // Check if good exists
+        let good = await Goods.findById(_id)
+        if (!good) {
+            return res.status(400).json({
+                errors: [{
+                    msg: 'Goods not available'
+                }]
+            })
+        }
+
+        let difference = stock - good.stock
+        let newQty = good.qty + difference
+
+        await Goods.updateOne({
+            name,
+            stock,
+            unit,
+            buyPrice,
+            sellPrice,
+            qty: newQty
+        })
+
+        return res.json({
+            msg: 'success'
+        })
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server error')
+    }
+})
+
 module.exports = router;
