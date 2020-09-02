@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const KpmSchema = new mongoose.Schema({
     kks: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     hamlet: {
         type: String,

@@ -11,6 +11,13 @@ app.use(express.json({
     extended: false
 }))
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Request-Headers', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    next();
+});
+
 // Define Routes
 app.use('/api/kpm', require('./routes/api/kpm'))
 

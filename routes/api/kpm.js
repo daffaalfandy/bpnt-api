@@ -18,7 +18,19 @@ router.post('/', async (req, res) => {
     } = req.body;
 
     try {
-        let user = new Kpm({
+        // Check if kpm exists
+        let kpm = await Kpm.findOne({
+            kks
+        });
+        if (kpm) {
+            return res.status(400).json({
+                errors: [{
+                    msg: 'User already exists'
+                }]
+            })
+        }
+
+        kpm = new Kpm({
             kks,
             name,
             hamlet,
@@ -28,7 +40,7 @@ router.post('/', async (req, res) => {
         })
 
         // Save data to db
-        await user.save();
+        await kpm.save();
 
         // Return kpm data
         return res.json({
