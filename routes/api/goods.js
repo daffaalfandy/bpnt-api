@@ -64,4 +64,36 @@ router.get('/', async (req, res) => {
     }
 })
 
+// @route   DELETE api/goods/id
+// @desc    Delete one goods
+// @access  Public
+router.delete('/:id', async (req, res) => {
+    const _id = req.params.id;
+
+    try {
+        // Check if goods exists
+        let goods = await Goods.findById(_id)
+        if (!goods) {
+            return res.status(400).json({
+                errors: [{
+                    msg: 'Goods not available'
+                }]
+            })
+        }
+
+        await Goods.deleteOne({
+            _id
+        })
+
+
+        return res.json({
+            msg: 'success'
+        })
+
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server error')
+    }
+})
+
 module.exports = router;
