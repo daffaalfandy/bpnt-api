@@ -22,10 +22,10 @@ const KpmSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    subDisctrict: {
+    subDistrict: {
         type: String,
         required: true
     }
 })
 
-module.exports = Kpm = mongoose.model('kpm', KpmSchema)
+module.exports = Kpm = mongoose.model('kpm', KpmSchema, 'kpm-data')
