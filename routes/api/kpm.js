@@ -1,5 +1,4 @@
 const express = require('express')
-const config = require('config')
 const Kpm = require('../../models/Kpm')
 
 const router = express.Router();

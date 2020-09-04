@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
             month,
             year
         }).sort({
-            'updatedAt': -1
+            'createdAt': -1
         })
 
         return res.json({

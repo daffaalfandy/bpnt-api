@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
-    "server": "nodemon server"
+    "server": "nodemon server",
+    "debug": "DEBUG=express:* nodemon server.js"
   },
   "author": "Daffa Alfandy",
   "license": "BSD-3-Clause",

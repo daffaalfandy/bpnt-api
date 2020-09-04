@@ -31,6 +31,7 @@ app.use((req, res, next) => {
 // Define Routes
 app.use("/api/kpm", require("./routes/api/kpm"));
 app.use("/api/goods", require("./routes/api/goods"));
+app.use('/api/transaction', require('./routes/api/transaction'))
 
 const PORT = process.env.PORT || 5000;
 
