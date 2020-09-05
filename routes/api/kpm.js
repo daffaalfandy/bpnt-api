@@ -3,6 +3,22 @@ const Kpm = require('../../models/Kpm')
 
 const router = express.Router();
 
+// @route   GET api/kpm
+// @desc    Get all kpm
+// @access  Public
+router.get('/', async (req, res) => {
+    try {
+        let allKpm = await Kpm.find({})
+
+        return res.json({
+            allKpm
+        })
+    } catch (err) {
+        console.log(err.message)
+        req.status(500).send('Server error')
+    }
+})
+
 // @route   POST api/kpm
 // @desc    Register new KPM
 // @access  Public
