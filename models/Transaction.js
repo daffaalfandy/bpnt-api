@@ -17,6 +17,8 @@ const TransactionSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
+}, {
+    timestamps: true
 })
 
 module.exports = Transaction = mongoose.model('transactions', TransactionSchema, 'transaction-data')

@@ -26,6 +26,8 @@ const KpmSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+}, {
+    timestamps: true
 })
 
 module.exports = Kpm = mongoose.model('kpm', KpmSchema, 'kpm-data')
