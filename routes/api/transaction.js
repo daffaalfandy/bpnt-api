@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
 // @route   GET api/transaction/:kks
 // @desc    Get transaction based on kks
 // @access  Public
-router.get('/:kks', async (req, res) => {
+router.get('/kks/:kks', async (req, res) => {
   const kks = req.params.kks
 
   try {
@@ -71,6 +71,48 @@ router.get('/:kks', async (req, res) => {
     }).sort({
       createdAt: -1
     })
+
+    return res.json({
+      transaction
+    })
+  } catch (err) {
+    console.log(err.message);
+    req.status(500).send("Server error");
+  }
+})
+
+// @route   GET api/transaction/all?d= &m= &y=
+// @desc    Get transaction based on date, month, year
+// @access  Public
+router.get('/all', async (req, res) => {
+  const month = req.query.m
+  const year = req.query.y
+  let date = ""
+  if (req.query.d) {
+    date = req.query.d
+  }
+
+  try {
+    let transaction
+    if (req.query.d) {
+      transaction = await Transaction.find({
+        datepick: {
+          date,
+          month,
+          year
+        }
+      }).sort({
+        createdAt: -1
+      })
+
+    } else {
+      transaction = await Transaction.find({
+        'datepick.month': month,
+        'datepick.year': year
+      }).sort({
+        createdAt: -1
+      })
+    }
 
     return res.json({
       transaction
