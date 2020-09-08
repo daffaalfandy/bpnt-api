@@ -9,12 +9,7 @@ const router = express.Router();
 // @desc    Add new transaction
 // @access  Public
 router.post("/", async (req, res) => {
-  const {
-    kks,
-    datepick,
-    items,
-    overallPrice
-  } = req.body;
+  const { kpm, datepick, items, overallPrice } = req.body;
 
   try {
     // Update good stock
@@ -25,24 +20,29 @@ router.post("/", async (req, res) => {
 
       if (!good) {
         return res.status(400).json({
-          errors: [{
-            msg: "Good not registered",
-          }, ],
+          errors: [
+            {
+              msg: "Good not registered",
+            },
+          ],
         });
       } else {
-        await Goods.updateOne({
-          _id: items[i].itemId,
-        }, {
-          $set: {
-            stock: good.stock - items[i].qty,
+        await Goods.updateOne(
+          {
+            _id: items[i].itemId,
           },
-        });
+          {
+            $set: {
+              stock: good.stock - items[i].qty,
+            },
+          }
+        );
       }
     }
 
     // Save the transaction
     let transaction = new Transaction({
-      kks,
+      kpm,
       datepick,
       items,
       overallPrice,
@@ -62,65 +62,64 @@ router.post("/", async (req, res) => {
 // @route   GET api/transaction/:kks
 // @desc    Get transaction based on kks
 // @access  Public
-router.get('/kks/:kks', async (req, res) => {
-  const kks = req.params.kks
+router.get("/kks/:kks", async (req, res) => {
+  const kks = req.params.kks;
 
   try {
     let transaction = await Transaction.find({
-      kks
+      "kpm.kks": kks,
     }).sort({
-      createdAt: -1
-    })
+      createdAt: -1,
+    });
 
     return res.json({
-      transaction
-    })
+      transaction,
+    });
   } catch (err) {
     console.log(err.message);
     req.status(500).send("Server error");
   }
-})
+});
 
 // @route   GET api/transaction/all?d= &m= &y=
 // @desc    Get transaction based on date, month, year
 // @access  Public
-router.get('/all', async (req, res) => {
-  const month = req.query.m
-  const year = req.query.y
-  let date = ""
+router.get("/all", async (req, res) => {
+  const month = req.query.m;
+  const year = req.query.y;
+  let date = "";
   if (req.query.d) {
-    date = req.query.d
+    date = req.query.d;
   }
 
   try {
-    let transaction
+    let transaction;
     if (req.query.d) {
       transaction = await Transaction.find({
         datepick: {
           date,
           month,
-          year
-        }
+          year,
+        },
       }).sort({
-        createdAt: -1
-      })
-
+        createdAt: -1,
+      });
     } else {
       transaction = await Transaction.find({
-        'datepick.month': month,
-        'datepick.year': year
+        "datepick.month": month,
+        "datepick.year": year,
       }).sort({
-        createdAt: -1
-      })
+        createdAt: -1,
+      });
     }
 
     return res.json({
-      transaction
-    })
+      transaction,
+    });
   } catch (err) {
     console.log(err.message);
     req.status(500).send("Server error");
   }
-})
+});
 
 module.exports = router;

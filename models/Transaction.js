@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const TransactionSchema = new mongoose.Schema({
-    kks: {
-        type: String,
+    kpm: {
+        type: Object,
         required: true,
     },
     datepick: {
