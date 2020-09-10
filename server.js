@@ -32,6 +32,7 @@ app.use((req, res, next) => {
 app.use("/api/kpm", require("./routes/api/kpm"));
 app.use("/api/goods", require("./routes/api/goods"));
 app.use('/api/transaction', require('./routes/api/transaction'))
+app.use('/api/admin', require('./routes/api/admin'))
 
 const PORT = process.env.PORT || 5000;
 
