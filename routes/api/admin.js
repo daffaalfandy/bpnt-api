@@ -21,6 +21,12 @@ router.post('/', async (req, res) => {
             username
         })
 
+        if (!admin) {
+            return res.json({
+                msg: "Login failed"
+            })
+        }
+
         bcrypt.compare(password, admin.password, (err, result) => {
             if (result) {
                 return res.json({
