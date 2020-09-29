@@ -1,5 +1,6 @@
 const express = require("express");
 const Goods = require("../../models/Goods");
+const Purchase = require("../../models/PurchaseTransaction");
 
 const router = express.Router();
 
@@ -21,8 +22,23 @@ router.post("/", async (req, res) => {
       year,
     });
 
-    // Save to db
     await goods.save();
+
+    let purchase = new Purchase({
+      name,
+      unit,
+      stock,
+      buyPrice,
+      sellPrice,
+      qty: stock,
+      month,
+      year,
+      good_id: goods._id,
+      oldStock: 0,
+    });
+
+    // Save to db
+    await purchase.save();
 
     // Return goods data
     return res.json({
@@ -35,7 +51,7 @@ router.post("/", async (req, res) => {
 });
 
 // @route   GET api/goods?m= &y=
-// @desc    Get all goods based on mont and year
+// @desc    Get all goods based on month and year
 // @access  Public
 router.get("/", async (req, res) => {
   const month = req.query.m;
@@ -51,6 +67,30 @@ router.get("/", async (req, res) => {
 
     return res.json({
       goods,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// @route   GET api/goods/transaction?m= &y=
+// @desc    Get goods transaction based on month and year
+// @access  Public
+router.get("/transaction", async (req, res) => {
+  const month = req.query.m;
+  const year = req.query.y;
+
+  try {
+    let purchase = await Purchase.find({
+      month,
+      year,
+    }).sort({
+      createdAt: -1,
+    });
+
+    return res.json({
+      purchase,
     });
   } catch (err) {
     console.log(err.message);
@@ -76,6 +116,8 @@ router.delete("/:id", async (req, res) => {
         ],
       });
     }
+
+    await Purchase.deleteMany({ good_id: goods._id });
 
     await Goods.deleteOne({
       _id,
@@ -111,20 +153,38 @@ router.put("/:id", async (req, res) => {
       });
     }
 
-    let difference = stock - good.stock;
-    let newQty = good.qty + difference;
+    let newStock = Number(good.stock) + Number(stock);
+    let newQty = Number(good.qty) + Number(stock);
 
     await Goods.updateOne(
-      { _id },
+      {
+        _id,
+      },
       {
         name,
-        stock,
+        stock: newStock,
         unit,
         buyPrice,
         sellPrice,
         qty: newQty,
       }
     );
+
+    let purchase = new Purchase({
+      name,
+      unit,
+      stock: newStock,
+      buyPrice,
+      sellPrice,
+      qty: stock,
+      month: good.month,
+      year: good.year,
+      good_id: good._id,
+      oldStock: good.stock,
+    });
+
+    // Save to db
+    await purchase.save();
 
     return res.json({
       msg: "success",
