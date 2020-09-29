@@ -9,6 +9,10 @@ const AdminSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    role: {
+        type: Number,
+        required: true
+    },
     password: {
         type: String,
         required: true

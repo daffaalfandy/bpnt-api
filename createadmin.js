@@ -43,7 +43,8 @@ connectDB().then(() => {
             let admin = new Admin({
                 username: result.username,
                 name: result.name,
-                password: hash
+                password: hash,
+                role: 1
             })
 
             admin.save().then(() => {
